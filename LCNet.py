@@ -7,7 +7,7 @@ from pybnn.lcnet import LCNet
 
 model = LCNet()
 
-def train_and＿predict(model, currentIteration, totalIteration, N, configs, acc):
+def train_and_predict(model, currentIteration, totalIteration, N, configs, acc):
 
     t_idx = np.arange(1, currentIteration + 1) / totalIteration
     t_grid = np.arange(1, totalIteration + 1) / totalIteration

@@ -1,18 +1,19 @@
 import json
 
 def readJson (numTrial, numIteration, path):
-    configurations = []
     acc_return = []
     config_return = []
-    for i in range (numTrial): 
-        with open(path[i], 'r') as f:
+    for j in range (numTrial): 
+        with open(path[j], 'r') as f:
+            configurations = []
+            accuracy = []
             lines = f.readlines()
             i = 0
             appended = False
-            while (i < len(lines)): 
+            while (i < numIteration): 
                 target = lines[i]
                 parse = json.loads(target)
-                acc_return.append(parse["mean_accuracy"])
+                accuracy.append(parse["mean_accuracy"])
                 if (appended == False):
                     for key in parse["config"]:
                         if (key != "args"):
@@ -21,8 +22,9 @@ def readJson (numTrial, numIteration, path):
                     appended = True
 
                 i = i + 1
+            acc_return.append(accuracy)
     
     return [acc_return, config_return]
 
-print (readJson(1, 4, ["/Users/timchang/Desktop/project/result.json"])[0])
-print (readJson(1, 4, ["/Users/timchang/Desktop/project/result.json"])[1])
+print (readJson(1, 2, ["/Users/timchang/Desktop/project/result.json"])[0])
+print (readJson(1, 2, ["/Users/timchang/Desktop/project/result.json"])[1])
