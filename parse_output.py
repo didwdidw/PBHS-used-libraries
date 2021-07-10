@@ -1,30 +1,40 @@
 import json
+import copy
 
-def readJson (numTrial, numIteration, path):
-    acc_return = []
+def readConfig (numTrial, path):
+    path_modified = copy.deepcopy(path)
+    for i in range(numTrial):
+        path_modified[i] = path_modified[i][:-11]
+        path_modified[i] += "params.json"
+
     config_return = []
     for j in range (numTrial): 
-        with open(path[j], 'r') as f:
-            configurations = []
-            accuracy = []
+        config = []
+        with open(path_modified[j], 'r') as f:
             lines = f.readlines()
-            i = 0
-            appended = False
-            while (i < numIteration): 
-                target = lines[i]
-                parse = json.loads(target)
-                accuracy.append(parse["mean_accuracy"])
-                if (appended == False):
-                    for key in parse["config"]:
-                        if (key != "args"):
-                            configurations.append(parse["config"][key])
-                    config_return.append(configurations)
-                    appended = True
+        merge = ""
+        for line in lines:
+            merge += line.strip()
+        parse = json.loads(merge)
+        for key in parse:
+            if (key != "args"):
+                config.append( parse[key] )
 
-                i = i + 1
+        config_return.append(config)
+        
+    return config_return
+
+
+def readAcc (numTrial, numIteration, path):
+    acc_return = []
+    for j in range (numTrial): 
+        accuracy = []
+        with open(path[j], 'r') as f:
+            lines = f.readlines()
+            for i in range(numIteration):
+               parse = json.loads(lines[i])
+               accuracy.append( parse["mean_accuracy"] )
+                
             acc_return.append(accuracy)
     
-    return [acc_return, config_return]
-
-print (readJson(1, 2, ["/Users/timchang/Desktop/project/result.json"])[0])
-print (readJson(1, 2, ["/Users/timchang/Desktop/project/result.json"])[1])
+    return acc_return
